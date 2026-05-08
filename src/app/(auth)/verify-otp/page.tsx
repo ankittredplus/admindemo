@@ -1,18 +1,17 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, Suspense, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { requestPasswordReset, verifyOtp } from "@/lib/mock/authService";
 
-export default function VerifyOtpPage() {
+function VerifyOtpContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const email = useMemo(() => searchParams.get("email") ?? "", [searchParams]);
 
   const [otp, setOtp] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);  
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
@@ -64,8 +63,7 @@ export default function VerifyOtpPage() {
       <section className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-6">
         <h1 className="text-2xl font-semibold mb-1">Verify OTP</h1>
         <p className="text-sm text-white/70 mb-6">
-          Enter the 6-digit OTP sent for:{" "}
-          <span className="text-white">{email || "unknown email"}</span>
+          Enter the 6-digit OTP sent for: <span className="text-white">{email || "unknown email"}</span>
         </p>
 
         <form onSubmit={handleVerify} className="space-y-4">
@@ -107,5 +105,13 @@ export default function VerifyOtpPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function VerifyOtpPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#05060F]" />}>
+      <VerifyOtpContent />
+    </Suspense>
   );
 }

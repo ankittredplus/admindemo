@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { resetPassword } from "@/lib/mock/authService";
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const email = useMemo(() => searchParams.get("email") ?? "", [searchParams]);
 
   const [newPassword, setNewPassword] = useState("");
@@ -101,5 +100,13 @@ export default function ResetPasswordPage() {
         </p>
       </section>
     </main>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#05060F]" />}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 }
