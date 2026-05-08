@@ -4,13 +4,19 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 
-export default function HomePage() {
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
   const token = useAuthStore((s) => s.token);
 
   useEffect(() => {
-    router.replace(token ? "/dashboard" : "/login");
+    if (token) {
+      router.replace("/dashboard");
+    }
   }, [token, router]);
 
-  return null;
+  return <>{children}</>;
 }
